@@ -14,24 +14,46 @@ const milUniElement = document.getElementById('milUni');
 const splitsElement = document.getElementById('splits');
 
 function printTime() {
-  // ... your code goes here
+  printMinutes();
+  printSeconds();
+  printMilliseconds();
 }
 
 function printMinutes() {
-  // ... your code goes here
+  // 1. Pegar a quantidade atual de minutos
+  const minutes = chronometer.computeTwoDigitNumber(chronometer.getMinutes());
+
+  // 2. Atualizar o conteúdo dos elementos HTML
+  minDecElement.innerText = minutes[0];
+  minUniElement.innerText = minutes[1];
 }
 
 function printSeconds() {
-  // ... your code goes here
+  // 1. Pegar a quantidade atual de segundos
+  const seconds = chronometer.computeTwoDigitNumber(chronometer.getSeconds());
+
+  // 2. Atualizar o conteúdo dos elementos HTML
+  secDecElement.innerText = seconds[0];
+  secUniElement.innerText = seconds[1];
 }
 
 // ==> BONUS
 function printMilliseconds() {
-  // ... your code goes here
+  const milliseconds = chronometer.computeTwoDigitNumber(
+    chronometer.getMilliseconds()
+  );
+
+  // 2. Atualizar o conteúdo dos elementos HTML
+  milDecElement.innerText = milliseconds[0];
+  milUniElement.innerText = milliseconds[1];
 }
 
 function printSplit() {
-  // ... your code goes here
+  // 1. Pegar o tempo do split atual
+  const listItem = `<li>${chronometer.split()}</li>`;
+
+  // 2. Criar um novo item de lista com ele
+  splitsElement.insertAdjacentHTML('beforeend', listItem);
 }
 
 function clearSplits() {
@@ -39,27 +61,76 @@ function clearSplits() {
 }
 
 function setStopBtn() {
-  // ... your code goes here
+  // 2. Parar o cronômetro
+  chronometer.stop();
+
+  // 3. Alterar o texto do botão esquerdo
+  btnLeftElement.innerText = 'START';
+
+  // 4. Alterar o texto do botão direito
+  btnRightElement.innerText = 'RESET';
+
+  toggleButtonColors();
 }
 
 function setSplitBtn() {
-  // ... your code goes here
+  printSplit();
 }
 
 function setStartBtn() {
-  // ... your code goes here
+  // 2. Iniciar o cronômetro
+  chronometer.start(printTime);
+
+  // 3. Alterar o texto do botão esquerdo
+  btnLeftElement.innerText = 'STOP';
+
+  // 4. Alterar o texto do botão direito
+  btnRightElement.innerText = 'SPLIT';
+
+  toggleButtonColors();
 }
 
 function setResetBtn() {
-  // ... your code goes here
+  chronometer.reset();
+  printTime();
+
+  while (splitsElement.firstChild) {
+    splitsElement.lastChild.remove();
+  }
+
+  // splitsElement.innerHTML = '';
+}
+
+function toggleButtonColors() {
+  // 5. Alterar a cor do botão esquerdo
+  btnLeftElement.classList.toggle('start');
+  btnLeftElement.classList.toggle('stop');
+
+  // 6. Alterar a cor do botão direito
+  btnRightElement.classList.toggle('reset');
+  btnRightElement.classList.toggle('split');
 }
 
 // Start/Stop Button
 btnLeftElement.addEventListener('click', () => {
-  // ... your code goes here
+  // 1. Escutar click do usuário no botão da esquerda
+
+  // SE o cronômetro estiver PARADO:
+  if (btnLeftElement.innerText === 'START') {
+    setStartBtn();
+  } else if (btnLeftElement.innerText === 'STOP') {
+    // SE o cronômetro estiver RODANDO:
+    setStopBtn();
+  }
 });
 
 // Reset/Split Button
 btnRightElement.addEventListener('click', () => {
-  // ... your code goes here
+  // SE o cronômetro estiver PARADO:
+  if (btnLeftElement.innerText === 'START') {
+    setResetBtn();
+  } else if (btnLeftElement.innerText === 'STOP') {
+    // SE o cronômetro estiver RODANDO:
+    setSplitBtn();
+  }
 });
